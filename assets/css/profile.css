@@ -1,0 +1,240 @@
+/* ===========================
+   PROFILE PAGE
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#f5f7fb;
+    font-family:'Segoe UI',sans-serif;
+    color:#333;
+}
+
+/* Hero Section */
+
+.profile-header{
+    margin-top:30px;
+    height:450px;
+    border-radius:20px;
+    overflow:hidden;
+    position:relative;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
+
+.profile-header img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.overlay{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    padding:40px;
+    color:#fff;
+    background:linear-gradient(to top,
+        rgba(0,0,0,.85),
+        rgba(0,0,0,.25),
+        transparent);
+}
+
+.overlay h2{
+    font-size:38px;
+    font-weight:700;
+}
+
+.overlay p{
+    margin-bottom:6px;
+    font-size:17px;
+}
+
+/* Cards */
+
+.info-card,
+.about-box{
+    background:#fff;
+    border-radius:15px;
+    padding:25px;
+    margin-bottom:25px;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.info-card h4,
+.about-box h4{
+    margin-bottom:20px;
+    font-weight:700;
+    color:#ff3366;
+}
+
+.info-item{
+    display:flex;
+    align-items:center;
+    padding:14px 0;
+    border-bottom:1px solid #eee;
+}
+
+.info-item:last-child{
+    border-bottom:none;
+}
+
+.info-item i{
+    width:40px;
+    font-size:18px;
+    color:#ff3366;
+}
+
+.info-item strong{
+    width:130px;
+}
+
+/* About */
+
+.about-box p{
+    line-height:30px;
+    color:#555;
+}
+
+/* Contact Card */
+
+.contact-card{
+    background:#fff;
+    border-radius:15px;
+    padding:25px;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.contact-card h4{
+    color:#ff3366;
+    margin-bottom:20px;
+}
+
+.contact-card p{
+    margin-bottom:12px;
+}
+
+/* Buttons */
+
+.bottom-buttons{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    background:#fff;
+    padding:15px;
+    box-shadow:0 -5px 15px rgba(0,0,0,.15);
+    z-index:999;
+}
+
+.bottom-buttons .btn{
+    border-radius:50px;
+    padding:12px 25px;
+    font-weight:600;
+}
+
+.btn-interest{
+    background:#ff3366;
+    color:#fff;
+}
+
+.btn-interest:hover{
+    background:#e6004c;
+    color:#fff;
+}
+
+.btn-shortlist{
+    background:#ff9800;
+    color:#fff;
+}
+
+.btn-shortlist:hover{
+    background:#e68900;
+    color:#fff;
+}
+
+.btn-chat{
+    background:#2196f3;
+    color:#fff;
+}
+
+.btn-chat:hover{
+    background:#1976d2;
+    color:#fff;
+}
+
+/* Badge */
+
+.profile-badge{
+    position:absolute;
+    top:20px;
+    right:20px;
+    background:#28a745;
+    color:#fff;
+    padding:8px 15px;
+    border-radius:50px;
+    font-size:14px;
+    font-weight:600;
+}
+
+/* Tabs */
+
+.profile-tabs{
+    margin-top:25px;
+}
+
+.profile-tabs .nav-link{
+    color:#555;
+    font-weight:600;
+}
+
+.profile-tabs .nav-link.active{
+    color:#ff3366;
+    border-bottom:3px solid #ff3366;
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+.profile-header{
+    height:320px;
+}
+
+.overlay{
+    padding:20px;
+}
+
+.overlay h2{
+    font-size:28px;
+}
+
+.info-item{
+    display:block;
+}
+
+.info-item strong{
+    display:block;
+    margin-bottom:5px;
+}
+
+.bottom-buttons .row>div{
+    margin-bottom:10px;
+}
+
+.bottom-buttons{
+    position:relative;
+    margin-top:30px;
+}
+
+}
+
+/* Redesigned full-width layout */
+.info-card,.about-box,.contact-card{
+max-width:900px;
+margin:0  25px;
+}

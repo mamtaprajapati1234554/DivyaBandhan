@@ -1,0 +1,345 @@
+/* ==========================================
+   Google Font
+========================================== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root{
+    --primary:#934761;
+    --secondary:#AD5C71;
+    --accent:#72BAA9;
+    --light:#D5E7B5;
+
+    --white:#ffffff;
+    --text:#2D2D2D;
+
+    --radius:18px;
+    --shadow:0 20px 45px rgba(147,71,97,.18);
+    --transition:.35s ease;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:40px;
+
+    background:
+    linear-gradient(
+        rgba(147,71,97,.60),
+        rgba(114,186,169,.45)
+    ),
+    url("../images/registerbackground.avif");
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+}
+
+/* ==========================================
+        FORM CONTAINER
+========================================== */
+
+.container{
+
+    width:100%;
+    max-width:580px;
+
+    padding:45px;
+
+    background:rgba(255,255,255,.92);
+
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+
+    border-radius:24px;
+
+    border:1px solid rgba(255,255,255,.4);
+
+    box-shadow:var(--shadow);
+
+    transition:var(--transition);
+}
+
+.container:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:0 28px 60px rgba(147,71,97,.25);
+}
+
+/* ==========================================
+              TITLE
+========================================== */
+
+h1{
+
+    text-align:center;
+
+    color:var(--primary);
+
+    font-size:34px;
+
+    font-weight:700;
+
+    margin-bottom:12px;
+}
+
+p{
+
+    text-align:center;
+
+    color:#555;
+
+    margin-bottom:32px;
+
+    font-size:15px;
+}
+
+/* ==========================================
+             LABEL
+========================================== */
+
+label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    color:var(--primary);
+
+    font-weight:600;
+
+    font-size:15px;
+}
+
+/* ==========================================
+          INPUT & SELECT
+========================================== */
+
+input,
+select{
+
+    width:100%;
+
+    padding:15px 18px;
+
+    margin-bottom:18px;
+
+    border-radius:12px;
+
+    border:2px solid var(--light);
+
+    background:#FDFDFD;
+
+    color:var(--text);
+
+    font-size:15px;
+
+    transition:var(--transition);
+}
+
+input::placeholder{
+
+    color:#999;
+}
+
+select{
+
+    cursor:pointer;
+}
+
+input:hover,
+select:hover{
+
+    border-color:var(--secondary);
+}
+
+input:focus,
+select:focus{
+
+    outline:none;
+
+    background:#fff;
+
+    border-color:var(--accent);
+
+    box-shadow:0 0 0 5px rgba(114,186,169,.20);
+}
+
+/* ==========================================
+            CHECKBOX
+========================================== */
+
+.checkbox{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:12px;
+
+    margin:18px 0 25px;
+}
+
+.checkbox input{
+
+    width:18px;
+
+    height:18px;
+
+    margin-top:3px;
+
+    accent-color:var(--primary);
+}
+
+.checkbox label{
+
+    margin:0;
+
+    font-size:14px;
+
+    color:#555;
+
+    font-weight:400;
+}
+
+/* ==========================================
+             BUTTON
+========================================== */
+
+button{
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:14px;
+
+    cursor:pointer;
+
+    font-size:17px;
+
+    font-weight:600;
+
+    color:#fff;
+
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--secondary)
+    );
+
+    transition:var(--transition);
+}
+
+button:hover{
+
+    transform:translateY(-4px);
+
+    background:linear-gradient(
+        135deg,
+        var(--secondary),
+        var(--primary)
+    );
+
+    box-shadow:0 18px 35px rgba(147,71,97,.30);
+}
+
+button:active{
+
+    transform:scale(.98);
+}
+
+/* ==========================================
+        DISABLED BUTTON
+========================================== */
+
+button:disabled{
+
+    background:#cfcfcf;
+
+    color:#777;
+
+    cursor:not-allowed;
+
+    transform:none;
+
+    box-shadow:none;
+}
+
+button:disabled:hover{
+
+    transform:none;
+
+    box-shadow:none;
+}
+
+/* ==========================================
+        SUCCESS / ERROR
+========================================== */
+
+.success{
+
+    text-align:center;
+
+    color:var(--accent);
+
+    font-weight:600;
+
+    margin-top:15px;
+}
+
+.error{
+
+    text-align:center;
+
+    color:#c62828;
+
+    font-weight:600;
+
+    margin-top:15px;
+}
+
+/* ==========================================
+          RESPONSIVE
+========================================== */
+
+@media(max-width:768px){
+
+    body{
+
+        padding:20px;
+    }
+
+    .container{
+
+        padding:30px 25px;
+    }
+
+    h1{
+
+        font-size:28px;
+    }
+
+    input,
+    select,
+    button{
+
+        font-size:15px;
+    }
+
+}

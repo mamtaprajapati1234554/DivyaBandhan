@@ -1,0 +1,11 @@
+/* theme.css */
+:root{
+ --primary:#934761;
+ --secondary:#AD5C71;
+ --accent:#72BAA9;
+ --background:#D5E7B5;
+ --white:#FFFFFF;
+ --text:#2D2D2D;
+ --shadow:0 10px 25px rgba(147,71,97,.15);
+ --radius:12px;
+}

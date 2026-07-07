@@ -1,0 +1,317 @@
+/* ==========================
+   RESET
+========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Segoe UI',sans-serif;
+    background:#f8f9fa;
+    color:#333;
+    overflow-x:hidden;
+}
+
+/* ==========================
+   NAVBAR
+========================== */
+
+.home-navbar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:80px;
+    background:#fff;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 60px;
+    box-shadow:0 2px 15px rgba(0,0,0,.08);
+    z-index:999;
+}
+
+.logo a{
+    text-decoration:none;
+    font-size:30px;
+    font-weight:700;
+    color:#7b1e3d;
+}
+
+.nav-menu{
+    display:flex;
+    list-style:none;
+    gap:35px;
+}
+
+.nav-menu li a{
+    text-decoration:none;
+    color:#444;
+    font-weight:600;
+    transition:.3s;
+}
+
+.nav-menu li a:hover{
+    color:#7b1e3d;
+}
+
+.auth-buttons{
+    display:flex;
+    gap:12px;
+}
+
+.login-btn,
+.register-btn,
+.dashboard-btn,
+.logout-btn{
+    text-decoration:none;
+    padding:10px 22px;
+    border-radius:30px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.login-btn{
+    border:2px solid #7b1e3d;
+    color:#7b1e3d;
+    background:#fff;
+}
+
+.login-btn:hover{
+    background:#7b1e3d;
+    color:#fff;
+}
+
+.register-btn,
+.dashboard-btn{
+    background:#7b1e3d;
+    color:#fff;
+}
+
+.register-btn:hover,
+.dashboard-btn:hover{
+    background:#5b1830;
+    color:#fff;
+}
+
+.logout-btn{
+    background:#dc3545;
+    color:#fff;
+}
+
+.logout-btn:hover{
+    background:#bb2d3b;
+}
+
+/* ==========================
+   HERO SECTION
+========================== */
+
+.hero-section{
+    position:relative;
+    margin-top:80px;
+    width:100%;
+    height:650px;
+    overflow:hidden;
+}
+
+.hero-img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.hero-section::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.45);
+}
+
+.hero-text{
+    position:absolute;
+    top:50%;
+    left:8%;
+    transform:translateY(-50%);
+    color:#fff;
+    max-width:550px;
+    z-index:2;
+}
+
+.hero-text h1{
+    font-size:55px;
+    line-height:1.2;
+    font-weight:700;
+}
+
+.highlight{
+    color:#ffd54f;
+}
+
+.hero-text p{
+    margin-top:20px;
+    font-size:20px;
+    line-height:1.6;
+}
+
+/* ==========================
+   REGISTER CARD
+========================== */
+
+.register-card{
+    position:absolute;
+    top:50%;
+    right:8%;
+    transform:translateY(-50%);
+    width:360px;
+    background:#fff;
+    border-radius:20px;
+    padding:35px;
+    box-shadow:0 15px 35px rgba(0,0,0,.25);
+    z-index:2;
+}
+
+.register-card h3{
+    color:#7b1e3d;
+    margin-bottom:12px;
+    font-size:28px;
+}
+
+.register-card p{
+    color:#666;
+    margin-bottom:25px;
+}
+
+.register-btn-home{
+    display:block;
+    width:100%;
+    text-align:center;
+    padding:14px;
+    background:#7b1e3d;
+    color:#fff;
+    text-decoration:none;
+    border-radius:30px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.register-btn-home:hover{
+    background:#5b1830;
+    color:#fff;
+}
+
+.login-home{
+    display:block;
+    width:100%;
+    text-align:center;
+    margin-top:12px;
+    padding:14px;
+    border:2px solid #7b1e3d;
+    color:#7b1e3d;
+    text-decoration:none;
+    border-radius:30px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.login-home:hover{
+    background:#7b1e3d;
+    color:#fff;
+}
+
+/* ==========================
+   FEATURED MEMBERS
+========================== */
+
+.card{
+    border:none;
+    border-radius:15px;
+    overflow:hidden;
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 12px 25px rgba(0,0,0,.15);
+}
+
+.card-img-top{
+    object-fit:cover;
+}
+
+.btn-danger{
+    background:#7b1e3d;
+    border:none;
+}
+
+.btn-danger:hover{
+    background:#5b1830;
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media(max-width:991px){
+
+    .home-navbar{
+        padding:0 20px;
+    }
+
+    .nav-menu{
+        display:none;
+    }
+
+    .hero-section{
+        height:auto;
+    }
+
+    .hero-img{
+        height:500px;
+    }
+
+    .hero-text{
+        position:absolute;
+        left:5%;
+        top:35%;
+        max-width:90%;
+    }
+
+    .hero-text h1{
+        font-size:38px;
+    }
+
+    .hero-text p{
+        font-size:17px;
+    }
+
+    .register-card{
+        position:relative;
+        top:auto;
+        right:auto;
+        transform:none;
+        margin:30px auto;
+    }
+
+}
+
+@media(max-width:576px){
+
+    .hero-text h1{
+        font-size:30px;
+    }
+
+    .register-card{
+        width:90%;
+        padding:25px;
+    }
+
+    .logo a{
+        font-size:24px;
+    }
+
+}

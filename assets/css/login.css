@@ -1,0 +1,242 @@
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:40px;
+
+    background:
+    linear-gradient(
+        rgba(255,229,236,.55),
+        rgba(255,194,209,.55)
+    ),
+    url("../images/registerbackground.avif");
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+}
+
+/* =======================
+      LOGIN CONTAINER
+========================== */
+
+.container{
+
+    width:100%;
+    max-width:450px;
+
+    padding:40px;
+
+    border-radius:25px;
+
+    background:rgba(255,255,255,.85);
+
+    backdrop-filter:blur(10px);
+
+    -webkit-backdrop-filter:blur(10px);
+
+    border:1px solid rgba(255,255,255,.4);
+
+    box-shadow:0 20px 50px rgba(0,0,0,.20);
+}
+
+/* =======================
+          TITLE
+========================== */
+
+h2{
+
+    text-align:center;
+
+    color:#C2185B;
+
+    font-size:32px;
+
+    margin-bottom:30px;
+
+    font-weight:700;
+}
+
+/* =======================
+          LABEL
+========================== */
+
+label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    color:#AD1457;
+
+    font-weight:600;
+
+    font-size:15px;
+}
+
+/* =======================
+          INPUT
+========================== */
+
+input{
+
+    width:100%;
+
+    padding:14px 16px;
+
+    margin-bottom:20px;
+
+    border-radius:12px;
+
+    border:2px solid #F4A6BC;
+
+    background:#FFF8FB;
+
+    font-size:15px;
+
+    transition:.3s;
+}
+
+input:focus{
+
+    outline:none;
+
+    border-color:#E91E63;
+
+    background:#fff;
+
+    box-shadow:0 0 15px rgba(233,30,99,.25);
+}
+
+/* =======================
+          BUTTON
+========================== */
+
+button{
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-size:17px;
+
+    font-weight:600;
+
+    color:#fff;
+
+    background:linear-gradient(
+        90deg,
+        #EC407A,
+        #E91E63,
+        #C2185B
+    );
+
+    transition:.3s;
+}
+
+button:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 12px 25px rgba(233,30,99,.35);
+}
+
+button:active{
+
+    transform:scale(.98);
+}
+
+/* =======================
+       BOTTOM TEXT
+========================== */
+
+.bottom-text{
+
+    margin-top:25px;
+
+    text-align:center;
+
+    color:#555;
+
+    font-size:15px;
+}
+
+.bottom-text a{
+
+    color:#E91E63;
+
+    text-decoration:none;
+
+    font-weight:600;
+}
+
+.bottom-text a:hover{
+
+    text-decoration:underline;
+}
+
+/* =======================
+     SUCCESS / ERROR
+========================== */
+
+.success{
+
+    color:#2E7D32;
+
+    text-align:center;
+
+    margin-top:20px;
+
+    font-weight:600;
+}
+
+.error{
+
+    color:#D32F2F;
+
+    text-align:center;
+
+    margin-top:20px;
+
+    font-weight:600;
+}
+
+/* =======================
+       RESPONSIVE
+========================== */
+
+@media(max-width:768px){
+
+    .container{
+
+        padding:30px;
+    }
+
+    h2{
+
+        font-size:28px;
+    }
+}
