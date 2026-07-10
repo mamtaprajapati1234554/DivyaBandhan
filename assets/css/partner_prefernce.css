@@ -1,0 +1,145 @@
+/* ============================
+   Partner Preference Page CSS
+   ============================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f5f5f7;
+}
+
+.preference-container {
+    max-width: 700px;
+    margin: 40px auto;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    padding: 35px 40px;
+}
+
+.preference-container h2 {
+    color: #e91e63;
+    font-size: 26px;
+    margin-bottom: 8px;
+    border-bottom: 2px solid #f8bbd0;
+    padding-bottom: 12px;
+}
+
+.preference-container p.subtitle {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+/* Success Message */
+.alert-success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+/* Form Layout */
+.pref-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select {
+    padding: 10px 14px;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #e91e63;
+    box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.12);
+}
+
+.form-group input::placeholder {
+    color: #aaa;
+}
+
+/* Range fields (age, height) side by side */
+.range-group {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.range-group input {
+    flex: 1;
+    min-width: 0;   /* 👈 YE LINE MISSING THI - overlap fix karti hai */
+    width: 100%;
+}
+
+/* Submit Button */
+.btn-save {
+    background: linear-gradient(135deg, #e91e63, #f06292);
+    color: #fff;
+    border: none;
+    padding: 13px 30px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-save:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(233, 30, 99, 0.35);
+}
+
+.btn-save:active {
+    transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .preference-container {
+        margin: 20px 15px;
+        padding: 25px 20px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+}

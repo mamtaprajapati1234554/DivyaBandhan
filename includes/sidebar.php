@@ -33,7 +33,7 @@
         </li>
 
         <li>
-            <a href="../dashboard/partner-preference.php">
+           <a href="../dashboard/partner_preferences.php">
                 <i class="fa-solid fa-heart"></i>
                 Partner Preference
             </a>
