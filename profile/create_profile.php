@@ -354,8 +354,130 @@ $profile = $stmt->fetch(PDO::FETCH_ASSOC);
 
             </div>
 
-            <!-- PARTNER PREFERENCE -->
+            <!-- SKIP / SAVE - Personal Details form ke bilkul niche -->
 
+            <div class="text-center my-4">
+
+                <button type="submit" name="skip_family" value="1" class="btn btn-outline-secondary btn-lg" id="skipBtn">
+
+                    Skip
+
+                </button>
+
+                &nbsp;&nbsp;
+
+                <button type="button" class="btn btn-primary btn-lg" id="saveBtn" data-bs-toggle="modal" data-bs-target="#familyDetailsModal">
+
+                    Save
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <!-- FAMILY DETAILS MODAL - .profile-container ke bahar rakha hai taaki koi transform/filter
+         is modal ka position:fixed na todhe. Fields form="profileForm" se jude hain isliye
+         wo bhi asli form ke saath hi submit hote hain. -->
+
+    <div class="modal fade" id="familyDetailsModal" tabindex="-1" aria-labelledby="familyDetailsLabel" aria-hidden="true">
+
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="familyDetailsLabel">Family Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+                            <label>Father's Occupation</label>
+                            <input type="text" class="form-control" name="father_occupation" maxlength="150" form="profileForm"
+                                value="<?= htmlspecialchars($profile['father_occupation'] ?? '') ?>">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Mother's Occupation</label>
+                            <input type="text" class="form-control" name="mother_occupation" maxlength="150" form="profileForm"
+                                value="<?= htmlspecialchars($profile['mother_occupation'] ?? '') ?>">
+                        </div>
+
+                        <div class="col-md-3 mb-3">
+                            <label>Brothers</label>
+                            <input type="number" min="0" class="form-control" name="brothers" form="profileForm"
+                                value="<?= htmlspecialchars($profile['brothers'] ?? '') ?>">
+                        </div>
+
+                        <div class="col-md-3 mb-3">
+                            <label>Married Brothers</label>
+                            <input type="number" min="0" class="form-control" name="married_brothers" form="profileForm"
+                                value="<?= htmlspecialchars($profile['married_brothers'] ?? '') ?>">
+                        </div>
+
+                        <div class="col-md-3 mb-3">
+                            <label>Sisters</label>
+                            <input type="number" min="0" class="form-control" name="sisters" form="profileForm"
+                                value="<?= htmlspecialchars($profile['sisters'] ?? '') ?>">
+                        </div>
+
+                        <div class="col-md-3 mb-3">
+                            <label>Married Sisters</label>
+                            <input type="number" min="0" class="form-control" name="married_sisters" form="profileForm"
+                                value="<?= htmlspecialchars($profile['married_sisters'] ?? '') ?>">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Family Type</label>
+                            <select class="form-select" name="family_type" form="profileForm">
+                                <option value="">Select</option>
+                                <option <?= ($profile['family_type'] ?? '') == "Joint" ? "selected" : "" ?>>Joint</option>
+                                <option <?= ($profile['family_type'] ?? '') == "Nuclear" ? "selected" : "" ?>>Nuclear</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Native Place</label>
+                            <input type="text" class="form-control" name="native_place" maxlength="100" form="profileForm"
+                                value="<?= htmlspecialchars($profile['native_place'] ?? '') ?>">
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label>Family Description</label>
+                            <textarea class="form-control" rows="3" name="family_description" form="profileForm"><?= htmlspecialchars($profile['family_description'] ?? '') ?></textarea>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+                    <button type="submit" name="save_family" value="1" class="btn btn-primary" id="familySubmitBtn" form="profileForm">Save Profile</button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Bootstrap JS bundle - Family Details modal open/close karne ke liye zaroori hai -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
+            
+
+            PARTNER PREFERENCE
+<!-- 
             <div class="card mt-4">
 
                 <h3>Partner Preference</h3>
@@ -551,7 +673,7 @@ $profile = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 </div>
 
-            </div>
+            </div> -->
 
         </form>
 

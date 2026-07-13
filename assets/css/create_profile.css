@@ -350,3 +350,39 @@ select option{
 
 
 }
+
+
+
+
+/* ===== Family Details Modal ===== */
+/* Isko apni create_profile.css file ke end me add kar dena */
+
+#familyDetailsModal .modal-dialog {
+    z-index: 1056 !important;
+}
+
+#familyDetailsModal .modal-content {
+    background-color: #ffffff !important;
+    opacity: 1 !important;
+    border-radius: 10px !important;
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.4) !important;
+}
+
+#familyDetailsModal .modal-header,
+#familyDetailsModal .modal-body,
+#familyDetailsModal .modal-footer {
+    background-color: transparent !important;
+    border: none !important;
+}
+
+#familyDetailsModal .modal-header {
+    border-bottom: 1px solid #dee2e6 !important;
+}
+
+#familyDetailsModal .modal-footer {
+    border-top: 1px solid #dee2e6 !important;
+}
+
+.modal-backdrop.show {
+    opacity: 0.6 !important;
+}
