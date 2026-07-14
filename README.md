@@ -1,52 +1,18 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+session_start();
+require_once("../config/database.php");
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../auth/login.php");
+    exit;
 }
+
+$user_id = $_SESSION['user_id'];
+
+$stmt = $pdo->prepare("SELECT * FROM profiles WHERE user_id=?");
+$stmt->execute([$user_id]);
+
+$profile = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$isEdit = isset($_GET['mode']) && $_GET['mode']=="edit";
 ?>
-
-<nav class="home-navbar">
-
-    <!-- Logo -->
-    <div class="logo">
-        <a href="index.php">
-            <span class="heart">❤</span> DivyaBandhan
-        </a>
-    </div>
-
-    <!-- Navigation -->
-    <ul class="nav-menu">
-        <li><a href="index.php">Home</a></li>
-        <li><a href="matrimonial/search.php">Search</a></li>
-        <li><a href="active-members.php">Members</a></li>
-        <li><a href="success-stories.php">Success Stories</a></li>
-        <li><a href="contact.php">Contact</a></li>
-    </ul>
-
-    <!-- Right Buttons -->
-    <div class="auth-buttons">
-
-        <?php if(isset($_SESSION['user_id'])) { ?>
-
-            <a href="dashboard/" class="dashboard-btn">
-                Dashboard
-            </a>
-
-            <a href="auth/logout.php" class="logout-btn">
-                Logout
-            </a>
-
-        <?php } else { ?>
-
-            <a href="auth/login.php" class="login-btn">
-                Login
-            </a>
-
-            <a href="auth/register.php" class="register-btn">
-                Register
-            </a>
-
-        <?php } ?>
-
-    </div>
-
-</nav>

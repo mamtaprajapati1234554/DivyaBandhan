@@ -7,18 +7,18 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: register.php");
     exit;
 }
-
 $user_id = $_SESSION['user_id'];
+// ================= USER DETAILS =================
+$userStmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+$userStmt->execute([$user_id]);
+$user = $userStmt->fetch(PDO::FETCH_ASSOC);
 
-// User Details
-$stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
-$stmt->execute([$user_id]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+// ================= PROFILE DETAILS =================
+$profileStmt = $pdo->prepare("SELECT * FROM profiles WHERE user_id = ?");
+$profileStmt->execute([$user_id]);
+$profile = $profileStmt->fetch(PDO::FETCH_ASSOC);
 
-// Existing Profile
-$stmt = $pdo->prepare("SELECT * FROM profiles WHERE user_id=?");
-$stmt->execute([$user_id]);
-$profile = $stmt->fetch(PDO::FETCH_ASSOC);
+$isEdit = isset($_GET['mode']) && $_GET['mode'] == "edit";
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +46,11 @@ $profile = $stmt->fetch(PDO::FETCH_ASSOC);
 
        <form action="profileApi.php" method="POST" enctype="multipart/form-data" id="profileForm" novalidate>
 
-            <input type="hidden" name="user_id" value="<?= $user_id ?>">
+          <input type="hidden" name="user_id" value="<?= $user_id ?>">
+          <input type="hidden" name="profile_id" value="<?= htmlspecialchars($profile['id'] ?? '') ?>">
+
+            <!-- Tracks whether family step was skipped or saved, for profileApi.php's reference -->
+            <input type="hidden" name="family_action" id="familyActionInput" value="">
 
             <!-- PERSONAL DETAILS -->
 
@@ -354,11 +358,13 @@ $profile = $stmt->fetch(PDO::FETCH_ASSOC);
 
             </div>
 
-            <!-- SKIP / SAVE - Personal Details form ke bilkul niche -->
+            <!-- SKIP / SAVE - Personal Details ke bilkul niche.
+                 Skip -> seedha Partner Preference modal khulega (family step skip).
+                 Save -> Family Details modal khulega. -->
 
             <div class="text-center my-4">
 
-                <button type="submit" name="skip_family" value="1" class="btn btn-outline-secondary btn-lg" id="skipBtn">
+                <button type="button" class="btn btn-outline-secondary btn-lg" id="skipBtn">
 
                     Skip
 
@@ -380,7 +386,8 @@ $profile = $stmt->fetch(PDO::FETCH_ASSOC);
 
     <!-- FAMILY DETAILS MODAL - .profile-container ke bahar rakha hai taaki koi transform/filter
          is modal ka position:fixed na todhe. Fields form="profileForm" se jude hain isliye
-         wo bhi asli form ke saath hi submit hote hain. -->
+         wo bhi asli form ke saath hi submit hote hain.
+         Skip ya Save Profile - dono ke baad Partner Preference modal khulega (JS neeche). -->
 
     <div class="modal fade" id="familyDetailsModal" tabindex="-1" aria-labelledby="familyDetailsLabel" aria-hidden="true">
 
@@ -458,8 +465,8 @@ $profile = $stmt->fetch(PDO::FETCH_ASSOC);
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
-                    <button type="submit" name="save_family" value="1" class="btn btn-primary" id="familySubmitBtn" form="profileForm">Save Profile</button>
+                    <button type="button" class="btn btn-secondary" id="familySkipBtn">Skip</button>
+                    <button type="button" class="btn btn-primary" id="familySaveBtn">Save Profile</button>
                 </div>
 
             </div>
@@ -468,255 +475,241 @@ $profile = $stmt->fetch(PDO::FETCH_ASSOC);
 
     </div>
 
-    <!-- Bootstrap JS bundle - Family Details modal open/close karne ke liye zaroori hai -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- PARTNER PREFERENCE MODAL - isi tarah container ke bahar, fields form="profileForm" se jude hain.
+         Skip -> form submit ho jayega (family/partner data jo bhara hai wahi jayega, partner khaali) -> profileApi.php dashboard.php par redirect karega.
+         Save -> poora form (Personal + Family + Partner) submit hoga -> profileApi.php save karke dashboard.php par redirect karega, jahan card dikhega. -->
 
-</body>
+    <div class="modal fade" id="partnerPreferenceModal" tabindex="-1" aria-labelledby="partnerPreferenceLabel" aria-hidden="true">
 
-</html>
-            
+        <div class="modal-dialog modal-lg modal-dialog-centered">
 
-            PARTNER PREFERENCE
-<!-- 
-            <div class="card mt-4">
+            <div class="modal-content">
 
-                <h3>Partner Preference</h3>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="partnerPreferenceLabel">Partner Preference</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
 
-                <div class="row">
+                <div class="modal-body">
 
-                    <div class="col-md-6 mb-3">
+                    <div class="row">
 
-                        <label>Preferred Age From</label>
+                        <div class="col-md-6 mb-3">
 
-                        <select class="form-select" name="pref_age_min">
+                            <label>Preferred Age From</label>
 
-                            <?php
+                            <select class="form-select" name="pref_age_min" form="profileForm">
 
-                            for ($i = 18; $i <= 60; $i++) {
-                                $sel = (($profile['pref_age_min'] ?? '') == $i) ? "selected" : "";
-                                echo "<option $sel>$i</option>";
-                            }
+                                <?php
 
-                            ?>
+                                for ($i = 18; $i <= 60; $i++) {
+                                    $sel = (($profile['pref_age_min'] ?? '') == $i) ? "selected" : "";
+                                    echo "<option $sel>$i</option>";
+                                }
 
-                        </select>
+                                ?>
 
-                    </div>
+                            </select>
 
-                    <div class="col-md-6 mb-3">
+                        </div>
 
-                        <label>Preferred Age To</label>
+                        <div class="col-md-6 mb-3">
 
-                        <select class="form-select" name="pref_age_max">
+                            <label>Preferred Age To</label>
 
-                            <?php
+                            <select class="form-select" name="pref_age_max" form="profileForm">
 
-                            for ($i = 18; $i <= 60; $i++) {
-                                $sel = (($profile['pref_age_max'] ?? '') == $i) ? "selected" : "";
-                                echo "<option $sel>$i</option>";
-                            }
+                                <?php
 
-                            ?>
+                                for ($i = 18; $i <= 60; $i++) {
+                                    $sel = (($profile['pref_age_max'] ?? '') == $i) ? "selected" : "";
+                                    echo "<option $sel>$i</option>";
+                                }
 
-                        </select>
+                                ?>
 
-                    </div>
+                            </select>
 
-                    <div class="col-md-6 mb-3">
+                        </div>
 
-                        <label>Religion</label>
+                        <div class="col-md-6 mb-3">
 
-                        <select class="form-select" name="pref_religion">
+                            <label>Religion</label>
 
-                            <option <?= ($profile['pref_religion'] ?? '') == "Doesn't Matter" ? "selected" : "" ?>>Doesn't Matter</option>
+                            <select class="form-select" name="pref_religion" form="profileForm">
 
-                            <option <?= ($profile['pref_religion'] ?? '') == "Hindu" ? "selected" : "" ?>>Hindu</option>
+                                <option <?= ($profile['pref_religion'] ?? '') == "Doesn't Matter" ? "selected" : "" ?>>Doesn't Matter</option>
 
-                            <option <?= ($profile['pref_religion'] ?? '') == "Muslim" ? "selected" : "" ?>>Muslim</option>
+                                <option <?= ($profile['pref_religion'] ?? '') == "Hindu" ? "selected" : "" ?>>Hindu</option>
 
-                            <option <?= ($profile['pref_religion'] ?? '') == "Sikh" ? "selected" : "" ?>>Sikh</option>
+                                <option <?= ($profile['pref_religion'] ?? '') == "Muslim" ? "selected" : "" ?>>Muslim</option>
 
-                            <option <?= ($profile['pref_religion'] ?? '') == "Christian" ? "selected" : "" ?>>Christian</option>
+                                <option <?= ($profile['pref_religion'] ?? '') == "Sikh" ? "selected" : "" ?>>Sikh</option>
 
-                        </select>
+                                <option <?= ($profile['pref_religion'] ?? '') == "Christian" ? "selected" : "" ?>>Christian</option>
 
-                    </div>
+                            </select>
 
-                    <div class="col-md-6 mb-3">
+                        </div>
 
-                        <label>Marital Status</label>
+                        <div class="col-md-6 mb-3">
 
-                        <select class="form-select"
+                            <label>Marital Status</label>
 
-                            name="pref_marital_status">
+                            <select class="form-select" name="pref_marital_status" form="profileForm">
 
-                            <option <?= ($profile['pref_marital_status'] ?? '') == "Never Married" ? "selected" : "" ?>>Never Married</option>
+                                <option <?= ($profile['pref_marital_status'] ?? '') == "Never Married" ? "selected" : "" ?>>Never Married</option>
 
-                            <option <?= ($profile['pref_marital_status'] ?? '') == "Divorced" ? "selected" : "" ?>>Divorced</option>
+                                <option <?= ($profile['pref_marital_status'] ?? '') == "Divorced" ? "selected" : "" ?>>Divorced</option>
 
-                            <option <?= ($profile['pref_marital_status'] ?? '') == "Widow" ? "selected" : "" ?>>Widow</option>
+                                <option <?= ($profile['pref_marital_status'] ?? '') == "Widow" ? "selected" : "" ?>>Widow</option>
 
-                        </select>
+                            </select>
 
-                    </div>
+                        </div>
 
-                    <div class="col-md-6 mb-3">
+                        <div class="col-md-6 mb-3">
 
-                        <label>Country</label>
+                            <label>Country</label>
 
-                        <input
+                            <input class="form-control" name="pref_country" form="profileForm"
+                                value="<?= htmlspecialchars($profile['pref_country'] ?? '') ?>">
 
-                            class="form-control"
+                        </div>
 
-                            name="pref_country"
+                        <div class="col-md-6 mb-3">
 
-                            value="<?= $profile['pref_country'] ?? '' ?>">
+                            <label>Mother Tongue</label>
 
-                    </div>
+                            <input class="form-control" name="pref_mother_tongue" form="profileForm"
+                                value="<?= htmlspecialchars($profile['pref_mother_tongue'] ?? '') ?>">
 
-                    <div class="col-md-6 mb-3">
+                        </div>
 
-                        <label>Mother Tongue</label>
+                        <div class="col-md-12 mb-3">
 
-                        <input
+                            <label>Preferred Education</label>
 
-                            class="form-control"
+                            <select class="form-select" name="pref_education" form="profileForm">
 
-                            name="pref_mother_tongue"
+                                <option value="">Select Education</option>
 
-                            value="<?= $profile['pref_mother_tongue'] ?? '' ?>">
+                                <option <?= ($profile['pref_education'] ?? '') == "Any" ? "selected" : "" ?>>Any</option>
 
-                    </div>
+                                <option <?= ($profile['pref_education'] ?? '') == "10th Pass" ? "selected" : "" ?>>10th Pass</option>
+                                <option <?= ($profile['pref_education'] ?? '') == "12th Pass" ? "selected" : "" ?>>12th Pass</option>
 
-                    <div class="col-md-12 mb-3">
+                                <option <?= ($profile['pref_education'] ?? '') == "Diploma" ? "selected" : "" ?>>Diploma</option>
 
-                        <label>Preferred Education</label>
+                                <option <?= ($profile['pref_education'] ?? '') == "B.A" ? "selected" : "" ?>>B.A</option>
+                                <option <?= ($profile['pref_education'] ?? '') == "B.Com" ? "selected" : "" ?>>B.Com</option>
+                                <option <?= ($profile['pref_education'] ?? '') == "B.Sc" ? "selected" : "" ?>>B.Sc</option>
+                                <option <?= ($profile['pref_education'] ?? '') == "BCA" ? "selected" : "" ?>>BCA</option>
+                                <option <?= ($profile['pref_education'] ?? '') == "B.Tech" ? "selected" : "" ?>>B.Tech</option>
+                                <option <?= ($profile['pref_education'] ?? '') == "BE" ? "selected" : "" ?>>BE</option>
 
-                        <select class="form-select" name="pref_education">
+                                <option <?= ($profile['pref_education'] ?? '') == "M.A" ? "selected" : "" ?>>M.A</option>
+                                <option <?= ($profile['pref_education'] ?? '') == "M.Com" ? "selected" : "" ?>>M.Com</option>
+                                <option <?= ($profile['pref_education'] ?? '') == "M.Sc" ? "selected" : "" ?>>M.Sc</option>
+                                <option <?= ($profile['pref_education'] ?? '') == "MCA" ? "selected" : "" ?>>MCA</option>
+                                <option <?= ($profile['pref_education'] ?? '') == "M.Tech" ? "selected" : "" ?>>M.Tech</option>
+                                <option <?= ($profile['pref_education'] ?? '') == "MBA" ? "selected" : "" ?>>MBA</option>
 
-                            <option value="">Select Education</option>
+                                <option <?= ($profile['pref_education'] ?? '') == "Doctor (MBBS/MD)" ? "selected" : "" ?>>Doctor (MBBS/MD)</option>
+                                <option <?= ($profile['pref_education'] ?? '') == "CA" ? "selected" : "" ?>>CA</option>
+                                <option <?= ($profile['pref_education'] ?? '') == "Law" ? "selected" : "" ?>>Law</option>
 
-                            <option <?= ($profile['pref_education'] ?? '') == "Any" ? "selected" : "" ?>>Any</option>
+                                <option <?= ($profile['pref_education'] ?? '') == "Government Job" ? "selected" : "" ?>>Government Job</option>
 
-                            <option <?= ($profile['pref_education'] ?? '') == "10th Pass" ? "selected" : "" ?>>10th Pass</option>
-                            <option <?= ($profile['pref_education'] ?? '') == "12th Pass" ? "selected" : "" ?>>12th Pass</option>
+                                <option <?= ($profile['pref_education'] ?? '') == "Any Graduate" ? "selected" : "" ?>>Any Graduate</option>
+                                <option <?= ($profile['pref_education'] ?? '') == "Any Post Graduate" ? "selected" : "" ?>>Any Post Graduate</option>
 
-                            <option <?= ($profile['pref_education'] ?? '') == "Diploma" ? "selected" : "" ?>>Diploma</option>
+                                <option <?= ($profile['pref_education'] ?? '') == "Other" ? "selected" : "" ?>>Other</option>
 
-                            <option <?= ($profile['pref_education'] ?? '') == "B.A" ? "selected" : "" ?>>B.A</option>
-                            <option <?= ($profile['pref_education'] ?? '') == "B.Com" ? "selected" : "" ?>>B.Com</option>
-                            <option <?= ($profile['pref_education'] ?? '') == "B.Sc" ? "selected" : "" ?>>B.Sc</option>
-                            <option <?= ($profile['pref_education'] ?? '') == "BCA" ? "selected" : "" ?>>BCA</option>
-                            <option <?= ($profile['pref_education'] ?? '') == "B.Tech" ? "selected" : "" ?>>B.Tech</option>
-                            <option <?= ($profile['pref_education'] ?? '') == "BE" ? "selected" : "" ?>>BE</option>
+                            </select>
 
-                            <option <?= ($profile['pref_education'] ?? '') == "M.A" ? "selected" : "" ?>>M.A</option>
-                            <option <?= ($profile['pref_education'] ?? '') == "M.Com" ? "selected" : "" ?>>M.Com</option>
-                            <option <?= ($profile['pref_education'] ?? '') == "M.Sc" ? "selected" : "" ?>>M.Sc</option>
-                            <option <?= ($profile['pref_education'] ?? '') == "MCA" ? "selected" : "" ?>>MCA</option>
-                            <option <?= ($profile['pref_education'] ?? '') == "M.Tech" ? "selected" : "" ?>>M.Tech</option>
-                            <option <?= ($profile['pref_education'] ?? '') == "MBA" ? "selected" : "" ?>>MBA</option>
+                        </div>
 
-                            <option <?= ($profile['pref_education'] ?? '') == "Doctor (MBBS/MD)" ? "selected" : "" ?>>Doctor (MBBS/MD)</option>
-                            <option <?= ($profile['pref_education'] ?? '') == "CA" ? "selected" : "" ?>>CA</option>
-                            <option <?= ($profile['pref_education'] ?? '') == "Law" ? "selected" : "" ?>>Law</option>
+                        <div class="col-md-12 mb-3">
 
-                            <option <?= ($profile['pref_education'] ?? '') == "Government Job" ? "selected" : "" ?>>Government Job</option>
+                            <label>Preferred Caste</label>
 
-                            <option <?= ($profile['pref_education'] ?? '') == "Any Graduate" ? "selected" : "" ?>>Any Graduate</option>
-                            <option <?= ($profile['pref_education'] ?? '') == "Any Post Graduate" ? "selected" : "" ?>>Any Post Graduate</option>
+                            <select class="form-select" name="pref_caste" form="profileForm">
 
-                            <option <?= ($profile['pref_education'] ?? '') == "Other" ? "selected" : "" ?>>Other</option>
+                                <option value="">Select Caste</option>
 
-                        </select>
+                                <option <?= ($profile['pref_caste'] ?? '') == "Brahmin" ? "selected" : "" ?>>Brahmin</option>
+                                <option <?= ($profile['pref_caste'] ?? '') == "Rajput" ? "selected" : "" ?>>Rajput</option>
+                                <option <?= ($profile['pref_caste'] ?? '') == "Maratha" ? "selected" : "" ?>>Maratha</option>
+                                <option <?= ($profile['pref_caste'] ?? '') == "Patel" ? "selected" : "" ?>>Patel</option>
+                                <option <?= ($profile['pref_caste'] ?? '') == "Yadav" ? "selected" : "" ?>>Yadav</option>
+                                <option <?= ($profile['pref_caste'] ?? '') == "Jat" ? "selected" : "" ?>>Jat</option>
+                                <option <?= ($profile['pref_caste'] ?? '') == "Gurjar" ? "selected" : "" ?>>Gurjar</option>
+                                <option <?= ($profile['pref_caste'] ?? '') == "Agarwal" ? "selected" : "" ?>>Agarwal</option>
+                                <option <?= ($profile['pref_caste'] ?? '') == "Baniya" ? "selected" : "" ?>>Baniya</option>
+                                <option <?= ($profile['pref_caste'] ?? '') == "Kayastha" ? "selected" : "" ?>>Kayastha</option>
+                                <option <?= ($profile['pref_caste'] ?? '') == "Reddy" ? "selected" : "" ?>>Reddy</option>
+                                <option <?= ($profile['pref_caste'] ?? '') == "Nair" ? "selected" : "" ?>>Nair</option>
+                                <option <?= ($profile['pref_caste'] ?? '') == "Lingayat" ? "selected" : "" ?>>Lingayat</option>
+                                <option <?= ($profile['pref_caste'] ?? '') == "Jain" ? "selected" : "" ?>>Jain</option>
 
-                    </div>
+                                <option <?= ($profile['pref_caste'] ?? '') == "Other" ? "selected" : "" ?>>Other</option>
 
-                    <div class="col-md-12 mb-3">
+                            </select>
 
-                        <label>Preferred Caste</label>
-
-                       <select class="form-select" name="pref_caste">
-
-                            <option value="">Select Caste</option>
-
-                            <option <?= ($profile['pref_caste'] ?? '') == "Brahmin" ? "selected" : "" ?>>Brahmin</option>
-                            <option <?= ($profile['pref_caste'] ?? '') == "Rajput" ? "selected" : "" ?>>Rajput</option>
-                            <option <?= ($profile['pref_caste'] ?? '') == "Maratha" ? "selected" : "" ?>>Maratha</option>
-                            <option <?= ($profile['pref_caste'] ?? '') == "Patel" ? "selected" : "" ?>>Patel</option>
-                            <option <?= ($profile['pref_caste'] ?? '') == "Yadav" ? "selected" : "" ?>>Yadav</option>
-                            <option <?= ($profile['pref_caste'] ?? '') == "Jat" ? "selected" : "" ?>>Jat</option>
-                            <option <?= ($profile['pref_caste'] ?? '') == "Gurjar" ? "selected" : "" ?>>Gurjar</option>
-                            <option <?= ($profile['pref_caste'] ?? '') == "Agarwal" ? "selected" : "" ?>>Agarwal</option>
-                            <option <?= ($profile['pref_caste'] ?? '') == "Baniya" ? "selected" : "" ?>>Baniya</option>
-                            <option <?= ($profile['pref_caste'] ?? '') == "Kayastha" ? "selected" : "" ?>>Kayastha</option>
-                            <option <?= ($profile['pref_caste'] ?? '') == "Reddy" ? "selected" : "" ?>>Reddy</option>
-                            <option <?= ($profile['pref_caste'] ?? '') == "Nair" ? "selected" : "" ?>>Nair</option>
-                            <option <?= ($profile['pref_caste'] ?? '') == "Lingayat" ? "selected" : "" ?>>Lingayat</option>
-                            <option <?= ($profile['pref_caste'] ?? '') == "Jain" ? "selected" : "" ?>>Jain</option>
-
-                            <option <?= ($profile['pref_caste'] ?? '') == "Other" ? "selected" : "" ?>>Other</option>
-
-                        </select>
-
-                    </div>
-
-                    <div class="col-md-12 text-center">
-
-                        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn" disabled>
-
-                            Save Profile
-
-                        </button>
+                        </div>
 
                     </div>
 
                 </div>
 
-            </div> -->
+                <div class="modal-footer">
+                    <button type="submit" name="skip_partner" value="1" class="btn btn-secondary" form="profileForm">Skip</button>
+                    <button type="submit" name="save_partner" value="1" class="btn btn-primary" form="profileForm">Save</button>
+                </div>
 
-        </form>
+            </div>
+
+        </div>
 
     </div>
 
+    <!-- Bootstrap JS bundle - modals open/close karne ke liye zaroori hai -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Wizard flow: Personal -> (Skip/Save) -> Family -> (Skip/Save) -> Partner Preference -> (Skip/Save submits) -->
     <script>
         (function () {
-            const form = document.getElementById('profileForm');
-            const submitBtn = document.getElementById('submitBtn');
+            var familyModalEl = document.getElementById('familyDetailsModal');
+            var partnerModalEl = document.getElementById('partnerPreferenceModal');
+            var familyModal = new bootstrap.Modal(familyModalEl);
+            var partnerModal = new bootstrap.Modal(partnerModalEl);
+            var familyActionInput = document.getElementById('familyActionInput');
 
-            // Fields that must be filled before submit is allowed
-            const requiredFields = form.querySelectorAll('[required]');
-
-            function checkFormValidity() {
-                let allValid = true;
-
-                requiredFields.forEach(function (field) {
-                    if (!field.value || field.value.trim() === '') {
-                        allValid = false;
-                        field.classList.add('is-invalid');
-                    } else {
-                        field.classList.remove('is-invalid');
-                    }
-                });
-
-                submitBtn.disabled = !allValid;
-            }
-
-            // Check on page load (in case values are pre-filled from DB)
-            checkFormValidity();
-
-            // Re-check every time a required field changes
-            requiredFields.forEach(function (field) {
-                field.addEventListener('input', checkFormValidity);
-                field.addEventListener('change', checkFormValidity);
+            // Personal Details "Skip" -> skip family entirely, go straight to Partner Preference
+            document.getElementById('skipBtn').addEventListener('click', function () {
+                familyActionInput.value = 'skip';
+                partnerModal.show();
             });
 
-            // Extra safety: prevent submit if somehow still invalid
-            form.addEventListener('submit', function (e) {
-                checkFormValidity();
-                if (submitBtn.disabled) {
-                    e.preventDefault();
-                }
+            // Family modal's own "Skip" -> close family modal, then open Partner Preference
+            document.getElementById('familySkipBtn').addEventListener('click', function () {
+                familyActionInput.value = 'skip';
+                familyModalEl.addEventListener('hidden.bs.modal', function handler() {
+                    partnerModal.show();
+                    familyModalEl.removeEventListener('hidden.bs.modal', handler);
+                });
+                familyModal.hide();
+            });
+
+            // Family modal's "Save Profile" -> keep family data, close modal, then open Partner Preference
+            document.getElementById('familySaveBtn').addEventListener('click', function () {
+                familyActionInput.value = 'save';
+                familyModalEl.addEventListener('hidden.bs.modal', function handler() {
+                    partnerModal.show();
+                    familyModalEl.removeEventListener('hidden.bs.modal', handler);
+                });
+                familyModal.hide();
             });
         })();
     </script>
